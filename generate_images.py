@@ -1,6 +1,30 @@
 import os
 import variable
 import requests
+import random
+
+wordvecs = variable.word_vecs
+
+cool_modifiers = ["vintage polaroid", "4k image award winning photograph", "digital art", "painted by salvador dali", "pixel art", "pencil drawing", "cubist", "painted by picasso"]
+
+def generate_phrases():
+    with open("adjectives.txt", "r") as adj_file:
+        adjectives = adj_file.read().splitlines()
+    with open("nouns.txt", "r") as noun_file:
+        nouns = noun_file.read().splitlines()
+
+    # generate list of all possible adjective-noun combinations
+    all_phrases = [noun1 + " " + noun2 + " " + modifier for noun1 in nouns for noun2 in nouns for modifier in cool_modifiers
+                if noun1 in wordvecs and noun2 in wordvecs]
+
+    # randomly select 200 unique phrases
+    selected_phrases = random.sample(all_phrases, 10)
+    
+
+    # write selected phrases to output file
+    with open("phrases.txt", "w") as output_file:
+        for phrase in selected_phrases:
+            output_file.write(phrase + "\n")
 
 
 
@@ -84,6 +108,6 @@ def get_first_word(word):
 def get_second_word(word):
     return word.split()[1]
 
-
+generate_phrases()
 generate_from_text("phrases.txt")
     
